@@ -78,7 +78,7 @@
 	2.6 С помощью команды git add были добавлены изменения в индекс (staging area) для будущего коммита:
 	$ git add README.md
 
-	2.7 с помощью команды git commit был создан коммит с файлами README.md и reports/lab1.md:
+	2.7 С помощью команды git commit был создан коммит с файлами README.md и reports/lab1.md:
 	$ git commit  
 	после этого открылся WIM, где было вписано название коммита "Initial commit"
 
@@ -158,7 +158,46 @@
 	  (use "git restore --staged <file>..." to unstage)
 	        modified:   README.md
 	        modified:   reports/lab1.md
-	3.5 После того, как в файл README.md были внесены изменения, была выполнена команда git diff README.md
+
+	3.5 После того, как в файл README.md были внесены изменения, была выполнена команда git diff README.md, которая показала удаленную и дбавленную строки: 
+	$ git diff README.md
+	diff --git a/README.md b/README.md
+	index a12790b..2bcd455 100644
+	--- a/README.md
+	+++ b/README.md
+	@@ -3,5 +3,4 @@
+	 Студент: Филатова Дарья, группа 5130201/50302
+
+	 Тут располагаются работы по дисциплине "Современные технологии разработки ПО"
+	-
+	-щовщывщрв
+	\ No newline at end of file
+	+активно делаю лабораторную
+	\ No newline at end of file
+
+	3.6 С помощью команды git add были зафиксированы изменения в файле reports/lab1.md:
+	$ git add reports/lab1.md. 
+	С помощью команды git commit был создан коммит с изменениями файла reports/lab1.md:
+	$ git commit reports/lab1.md -m "Заполнение отчета по лабораторной работе 1"
+
+4. Откат изменений
+	4.1 С помощью команды git restore получилось сделать откат изменений в файле README.md: несохраненные изменения пропали
+
+	4.2 После удаления файла reports/lab1.md была выполнена команда git status, которая показала, что файл не готов к коммиту, так как был удален:
+	$ git status
+	On branch main
+	Changes not staged for commit:
+	  (use "git add/rm <file>..." to update what will be committed)
+	  (use "git restore <file>..." to discard changes in working directory)
+	        deleted:    reports/lab1.md
+
+	4.3 С помощью команды git restore файл reports/lab1.md был восстановлен:
+	reports/lab1.md
+
+5. 
+
+
+
 
 
 
