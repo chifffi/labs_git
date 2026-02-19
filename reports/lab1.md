@@ -203,15 +203,20 @@
 	$ git branch 
 	$ git checkout lab1
 
-	5.3 В отчет был внесен протокол последних этапов работы, далее был сделан коммит в ветке lab1
+	5.3 В отчет был внесен протокол последних этапов работы, далее был сделан коммит в ветке lab1:
+	$ git add .
+	$ git commit -m "Коммит в ветке lab1"
 
-	//$ git checkout lab1
-		error: Your local changes to the following files would be overwritten by checkout:
-		        reports/lab1.md
-		Please commit your changes or stash them before you switch branches.
-		Aborting
+	5.4 Переключившись на ветку main, файл отчета вернулся к состоянию, которое было до создания коммита в ветке lab1: изменения, закоммиченные в ветке lab1, не видны в исходной ветке
 
+	5.5 Файл README.md был изменен, но не закоммичен. При попытке переключиться на ветку lab1 возникла ошибка: нельзя переключиться на другую ветку, не сохранив изменения на текущей
+	$ git checkout lab1
+	error: Your local changes to the following files would be overwritten by checkout:
+	        README.md
+	Please commit your changes or stash them before you switch branches.
+	Aborting
 
+6. Слияние веток, конфликты
 
 
 
