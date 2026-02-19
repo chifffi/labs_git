@@ -261,4 +261,19 @@
 	difil@ MINGW64 ~/git_labs (lab1)
 	$ git merge main
 
-	6.6 Ветка lab1 была удалена 
+	6.6 Ветка lab1 была удалена с помощью команды git branch -d lab1
+	$ git branch -d lab1
+	Deleted branch lab1 (was f8332cf).
+
+7. Работа с удаленным репозиторием
+	7.1 Был создан аккаунт на Github 
+
+	7.2 С помощью команды ssh-keygen был сконфигурирован SSH ключ
+
+	7.3 Был создан приватный репозиторий
+
+	7.4 С помощью коанды git remote add этот репозиторий был добавлен в качестве удаленного для  локального репозитория:
+	$ git remote add origin git@github.com:chifffi/labs_git.git  
+
+	7.5 С помощью команды git push были отправлены данные из локального репозитория в удаленный: 
+	$ git push -u origin main
