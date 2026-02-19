@@ -194,7 +194,25 @@
 	4.3 С помощью команды git restore файл reports/lab1.md был восстановлен:
 	reports/lab1.md
 
-5. 
+5. Ветвление версий
+	5.1 С помощью команды git branch можно создавать, просматривать, переименовывать и удалять ветки:
+	$ git branch
+	* main
+
+	5.2 Была создана новая ветка lab1, с помощью команды git checkout мы переключились на нее:
+	$ git branch 
+	$ git checkout lab1
+
+	5.3 В отчет был внесен протокол последних этапов работы, далее был сделан коммит в ветке lab1
+
+	//$ git checkout lab1
+		error: Your local changes to the following files would be overwritten by checkout:
+		        reports/lab1.md
+		Please commit your changes or stash them before you switch branches.
+		Aborting
+
+
+
 
 
 
