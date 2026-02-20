@@ -286,4 +286,214 @@
 	8.2 c помощью команды git clone было произведено клонирование удаленного репозитория в папку temp:
 	$ git clone git@github.com:chifffi/labs_git.git
 	
-	8.3 Во временном репозитории была добавлена информация о лабораторной работе, после чего изменения были закоммичены
+	8.3 Во временном репозитории была добавлена информация о лабораторной работе, после чего изменения были закоммичены:
+	$ git add .
+	$ git commit -m "сохранение во временной папке"
+	
+	8.4 Изменения были отправлены в удаленный репозиторий с помощью команды git push:
+	$ git push -u origin main
+
+	8.5 Вернувшись в первый локальный репозиторий, с помощью команды git fetch был совершен запрос обновлений из удаленного репозитория:
+	$ cd git_labs
+	$ git fetch
+	remote: Enumerating objects: 7, done.
+	remote: Counting objects: 100% (7/7), done.
+	remote: Compressing objects: 100% (2/2), done.
+	remote: Total 4 (delta 1), reused 4 (delta 1), pack-reused 0 (from 0)
+	Unpacking objects: 100% (4/4), 641 bytes | 14.00 KiB/s, done.
+	From github.com:chifffi/labs_git
+	   97e285a..df6d26a  main       -> origin/main 
+
+	8.6 Содержимое репозитория было синхронизировано командой git pull
+
+9. История изменений
+	commit 2496179d66ade9555acd2a349406b7dbe06dc304 (HEAD -> main)
+	Merge: fa1c6bb df6d26a
+	Author: Dasha <difilatova070907@gmail.com>
+	Date:   Fri Feb 20 17:08:00 2026 +0300
+
+	    синхронизация содержимого
+
+	commit df6d26a66419a37d454c04b5266ca48a7d659df5 (origin/main, origin/HEAD)
+	Author: Dasha <difilatova070907@gmail.com>
+	Date:   Fri Feb 20 16:55:09 2026 +0300
+
+	    сохранение во временной папке
+
+	commit fa1c6bbc1ff41ab99c89283cc43d0cac7877e089
+	Author: Dasha <difilatova070907@gmail.com>
+	Date:   Fri Feb 20 16:48:10 2026 +0300
+
+	    .
+
+	commit 97e285a4e2cc7fba21f65fbe7bff2e506435b7fe (origin/2-branch)
+	Author: chifffi <difilatova070907@gmail.com>
+	Date:   Fri Feb 20 16:12:30 2026 +0300
+
+	:...skipping...
+	commit 2496179d66ade9555acd2a349406b7dbe06dc304 (HEAD -> main)
+	Merge: fa1c6bb df6d26a
+	Author: Dasha <difilatova070907@gmail.com>
+	Date:   Fri Feb 20 17:08:00 2026 +0300
+
+	    синхронизация содержимого
+
+	commit df6d26a66419a37d454c04b5266ca48a7d659df5 (origin/main, origin/HEAD)
+	Author: Dasha <difilatova070907@gmail.com>
+	Date:   Fri Feb 20 16:55:09 2026 +0300
+
+	    сохранение во временной папке
+
+	commit fa1c6bbc1ff41ab99c89283cc43d0cac7877e089
+	Author: Dasha <difilatova070907@gmail.com>
+	Date:   Fri Feb 20 16:48:10 2026 +0300
+
+	    .
+
+	commit 97e285a4e2cc7fba21f65fbe7bff2e506435b7fe (origin/2-branch)
+	Author: chifffi <difilatova070907@gmail.com>
+	Date:   Fri Feb 20 16:12:30 2026 +0300
+
+	    Внесение изменений с удаленного репозитория
+
+	commit 18ec48a2c4fc19b8a9288452fc420c29a4976a4a
+	Author: Dasha <difilatova070907@gmail.com>
+	Date:   Thu Feb 19 19:19:42 2026 +0300
+
+	    Работа с удаленным репозиторием
+
+	commit f8332cfaa37366af45eafecb4621d1a995965cbd
+	Author: Dasha <difilatova070907@gmail.com>
+	Date:   Thu Feb 19 19:01:38 2026 +0300
+
+	    Сохранение
+
+	commit e7b35dd016ea63b32057eb048897bf3ecf065365
+	Merge: 7fde33f 32d3ab4
+	Author: Dasha <difilatova070907@gmail.com>
+	Date:   Thu Feb 19 18:56:53 2026 +0300
+
+	    Разрешение конфликта при слиянии
+
+	commit 7fde33f7014822548b971628056ada2cd5c60ef1
+	Author: Dasha <difilatova070907@gmail.com>
+	Date:   Thu Feb 19 18:44:27 2026 +0300
+
+	    Изменения в lab1 ветке
+
+	commit 32d3ab4272440cb78b92601d3b90f5eeaf72afd4
+	Author: Dasha <difilatova070907@gmail.com>
+	Date:   Thu Feb 19 18:42:32 2026 +0300
+
+	    В файл README изменен заголовок
+
+	commit f406a6082ea7fa8900335ccda664c4b30b87a82a
+	Author: Dasha <difilatova070907@gmail.com>
+	Date:   Thu Feb 19 18:40:04 2026 +0300
+
+	    В файл README добавлена информация о 1 лабораторной работе
+
+	commit f1004f6f29f2d22121d963754b29db13ea9e9d0d
+	Merge: 17f8286 caae380
+	Author: Dasha <difilatova070907@gmail.com>
+	Date:   Thu Feb 19 18:34:18 2026 +0300
+
+	    Исправление конфликта
+
+	commit 17f828661f02ab0c07e541eeaa84e12d59edb8e1
+	Author: Dasha <difilatova070907@gmail.com>
+	Date:   Thu Feb 19 18:31:09 2026 +0300
+
+	    Добавление информации в отчет
+
+	commit caae380b29fe377674ded0f8e5069af906b7a392
+	Author: Dasha <difilatova070907@gmail.com>
+	Date:   Thu Feb 19 17:57:48 2026 +0300
+
+	    Коммит в ветке lab1
+
+	commit 1b13ba9e20e037d96aeea4568e1e7e65b078d7ba
+	Author: Dasha <difilatova070907@gmail.com>
+	Date:   Thu Feb 19 17:55:47 2026 +0300
+
+	    Перед переходом на другую ветку
+
+	commit 19305fa74eb1b64dc7f2d0c5d5a4ee09716936ef
+	Author: Dasha <difilatova070907@gmail.com>
+	Date:   Thu Feb 19 00:14:58 2026 +0300
+
+	    Внесение протокола последних этапов работы
+
+	commit 6b2aa2ab10b7f467af8811c5183c8da3a4a43167
+	Author: Dasha <difilatova070907@gmail.com>
+	Date:   Wed Feb 18 23:55:33 2026 +0300
+
+	    Перед удалением файла
+
+	commit 65ba72f026db1807f6d53780748c27ba53e55704
+	Author: Dasha <difilatova070907@gmail.com>
+	Date:   Wed Feb 18 23:49:52 2026 +0300
+
+	    Заполнение отчета по лабораторной работе 1
+
+	commit ccad2ad9312db946793fe53216d5b20766561def
+	Merge: fd0fe45 78ee034
+	Author: Dasha <difilatova070907@gmail.com>
+	Date:   Thu Feb 12 14:56:39 2026 +0300
+
+	    итог после конфликта
+
+	commit fd0fe4543b1837208d70ff65ff038c4d1d9d36c2
+	Author: Dasha <difilatova070907@gmail.com>
+	Date:   Thu Feb 12 14:46:12 2026 +0300
+
+	    пепе
+
+	commit 78ee0345151f62f5bfd6b20fa65858248540a070
+	Author: Dasha <difilatova070907@gmail.com>
+	Date:   Thu Feb 12 14:44:23 2026 +0300
+
+	    долго но качественно
+
+	commit adcb2bc1c7ac3bcdb57e17702573ae9a97bc0ce1
+	Merge: 008351e 02e3877
+	Author: Dasha <difilatova070907@gmail.com>
+	Date:   Thu Feb 12 14:35:39 2026 +0300
+
+	    Merge branch 'lab1'
+
+	commit 008351e2eb74832d7187526096351730a1510d0b
+	Author: Dasha <difilatova070907@gmail.com>
+	Date:   Thu Feb 12 14:34:08 2026 +0300
+
+	    Суть файла
+
+	commit 02e38775f133ae9a4d7d3dca816cf62c1c73d344
+	Author: Dasha <difilatova070907@gmail.com>
+	Date:   Thu Feb 12 14:31:47 2026 +0300
+
+	    Создание папки и репозитория
+
+	commit d5213f3eff3b042bb6ec1f00dc56f900cafa1d73
+	Author: Dasha <difilatova070907@gmail.com>
+	Date:   Thu Feb 12 14:20:21 2026 +0300
+
+	    продолжение лабораторной
+
+	commit 08d3ca310e9c9c8cf3e42ae42ae9bba64af03d67
+	Author: Dasha <difilatova070907@gmail.com>
+	Date:   Wed Feb 11 22:42:17 2026 +0300
+
+	    point 3
+
+	commit a5ad0653fbc9571893b4c2230c00b067f6f9a100
+	Author: Dasha <difilatova070907@gmail.com>
+	Date:   Wed Feb 11 22:15:54 2026 +0300
+
+	    Добавление номера группы и описание хода работы
+
+	commit 96388376bf2f99bd08ededd258ef2aac2cdb40df
+	Author: Dasha <difilatova070907@gmail.com>
+	Date:   Wed Feb 11 21:55:24 2026 +0300
+
+	    initial commit
