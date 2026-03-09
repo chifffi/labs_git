@@ -83,16 +83,12 @@ Matrix::Matrix(const Matrix &other) {
 
 
 Matrix::~Matrix() {
-    if (matr == nullptr) 
-    {
-        throw "матрица пустая !!";
-    }
-    for (int i = 0; i < row; i++) 
-    {
+    if (matr != nullptr) {
+        for (int i = 0; i < row; i++) 
         {
-            delete[] matr[i];
+            delete[] matr[i]; 
         }
-        delete[] matr;
+        delete[] matr; 
     }
 }
 

@@ -29,13 +29,13 @@ MyString::MyString(const char* str) {
 // конструктор копирования
 MyString::MyString(const MyString &other) {
     if (other.stroka == nullptr) {
-        throw "строка пустая!!";
+        mylen = 0;
+        stroka = nullptr;  
+        return;
     }
-	mylen = other.mylen;
-    stroka = new char[mylen + 1]; // +1 для '\0'
-    
-    for (int i = 0; i <= mylen; i+=1) 
-    {
+    mylen = other.mylen;
+    stroka = new char[mylen + 1];
+    for (int i = 0; i <= mylen; i++) {
         stroka[i] = other.stroka[i];
     }
 }
@@ -75,54 +75,53 @@ void MyString::set(int i, char c){
 
 // замена текущего содержимого на новое
 void MyString::set_new_string(const char* str) {
-    if (stroka == nullptr) {
-        throw "строка пустая!!";
+    if (str == nullptr) {
+        // если передали nullptr - делаем строку пустой
+        if (stroka != nullptr) {
+            delete[] stroka;
+        }
+        mylen = 0;
+        stroka = nullptr;
+        return;
     }
-    if (str == nullptr) 
-    {
-	    std::cout << "передан нулевой указатель!!" << std::endl;
-	    return; 
-    }
-	int new_len = strlen(str);
     
-    //если новая строка короче или равна текущей, просто копируем
-    if (new_len <= mylen) 
+    int new_len = strlen(str);
+    
+    if (stroka != nullptr && new_len <= mylen) 
     {
-        for (int i = 0; i <= new_len; i+=1) 
-        {
+        // используем существующую память
+        for (int i = 0; i <= new_len; i++) {
             stroka[i] = str[i];
         }
         mylen = new_len;
     } 
-    else {
-        // выделяем новую память
+    else 
+    {
+        // нужно выделить новую память
         char* new_stroka = new char[new_len + 1];
-        
-        // копируем новую строку
-        for (int i = 0; i <= new_len; i+=1) 
-        {
+        for (int i = 0; i <= new_len; i++) {
             new_stroka[i] = str[i];
         }
         
-        // oсвобождаем старую память и присваиваем новые значения
-        delete[] stroka;
+        if (stroka != nullptr) {
+            delete[] stroka;
+        }
         stroka = new_stroka;
         mylen = new_len;
     }
 }
 
+
 // вывод строки на консоль
 void MyString::print() {
     if (stroka == nullptr) {
-        throw "строка пустая!!";
+        std::cout << "пустая строка !!" << std::endl; 
+        return;
     }
-	if (stroka != nullptr) {
-		for (int i = 0; i < mylen; i+=1) 
-		{
-	    	std::cout << stroka[i];  //каждый символ до '\0'
-		}
-		std::cout << std::endl;
-	}
+    for (int i = 0; i < mylen; i++) {
+        std::cout << stroka[i];
+    }
+    std::cout << std::endl;
 }
 
 // замена текущего содержимого строки на строку, считанную с консоли (неопределенного размера)
