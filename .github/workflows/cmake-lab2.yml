@@ -18,10 +18,12 @@ jobs:
         run: |
           mkdir -p build
           cd build
-          cmake ..
+          cmake ../labs/lab2
 
       - name: Сборка проекта
-        run: cd build && cmake --build .
+        run: |
+          cd build
+          cmake --build .
 
       - name: Копирование данных для тестов
         run: |
@@ -29,4 +31,6 @@ jobs:
           cp -r labs/lab2/data/* build/tests/data/ || true
 
       - name: Запуск тестов
-        run: cd build && ctest --output-on-failure
+        run: |
+          cd build
+          ctest --output-on-failure
