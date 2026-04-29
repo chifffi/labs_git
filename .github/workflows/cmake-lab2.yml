@@ -1,0 +1,32 @@
+name: CMake CI
+
+on:
+  push:
+    branches: [dev, main]
+  pull_request:
+    branches: [dev, main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Клонирование репозитория
+        uses: actions/checkout@v4
+
+      - name: Конфигурация CMake
+        run: |
+          mkdir -p build
+          cd build
+          cmake ..
+
+      - name: Сборка проекта
+        run: cd build && cmake --build .
+
+      - name: Копирование данных для тестов
+        run: |
+          mkdir -p build/tests/data
+          cp -r labs/lab2/data/* build/tests/data/ || true
+
+      - name: Запуск тестов
+        run: cd build && ctest --output-on-failure
