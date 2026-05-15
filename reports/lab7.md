@@ -78,7 +78,7 @@ sudo systemctl status ssh
 
 | Имя | Протокол | Адрес хоста | Порт хоста | Адрес гостя | Порт гостя |
 |-----|----------|-------------|------------|-------------|------------|
-| SSH | TCP | пусто | 2222 | пусто | 22 |
+| SSH | TCP | 127.0.0.1 | 2222 | пусто | 22 |
 
 **Почему такие значения:**
 
@@ -87,7 +87,7 @@ sudo systemctl status ssh
 | Порт хоста | 2222 | Порт на основном компьютере (выбран нестандартный, чтобы не конфликтовать с другими службами) |
 | Порт гостя | 22 | Стандартный порт SSH внутри виртуальной машины |
 
-![alt text](l72.png)
+![alt text](l74.png)
 
 ### 2.4. Подключение по паролю
 
@@ -147,7 +147,7 @@ ssh -p 2222 _@127.0.0.1
 
 # Внутри виртуальной машины:
 mkdir -p ~/.ssh
-echo "sssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOzQBquC6IqNzlf/P0LE/Ijojmk9lXq2EcX4VuNLhkaS lab7-key" >> ~/.ssh/authorized_keys
+echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOzQBquC6IqNzlf/P0LE/Ijojmk9lXq2EcX4VuNLhkaS lab7-key" >> ~/.ssh/authorized_keys
 chmod 700 ~/.ssh
 chmod 600 ~/.ssh/authorized_keys
 exit
@@ -213,7 +213,7 @@ sudo adduser dashka
 sudo mkdir -p /home/dashka/.ssh
 
 # 2. Добавление публичного ключа в файл authorized_keys
-echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILal41PjsbX3+ePFGIFb4kC6Gv/sEA2OjjMxhIFIxLZR" | sudo tee -a /home/dashka/.ssh/authorized_keys
+echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILal41PjsbX3+ePFGIFb4kC6Gv/sEA2OjjMxhIFIxLZR Дарья Мокренко@DESKTOP-V1F" | sudo tee -a /home/dashka/.ssh/authorized_keys
 
 # 3. Установка правильных прав доступа
 sudo chmod 700 /home/dashka/.ssh
@@ -221,4 +221,220 @@ sudo chmod 600 /home/dashka/.ssh/authorized_keys
 
 # 4. Установка владельца (пользователь dashka и его группа)
 sudo chown -R dashka:dashka /home/dashka/.ssh
+```
+### 3.3. Организация общей сети
+Компьютеры подключены к одной локальной сети. IP-адрес компьютера в сети:
+```bash
+ipconfig
+```
+**Результат:**
+```bash
+IPv4-адрес. . . . . . . . . . . . : 10.78.62.236
+```
+
+### 3.4. Проверка доступности (ping)
+С компьютера напарника выполнен ping:
+```bash
+ping 10.78.62.236
+```
+
+**Результат:** пинг прошёл успешно
+
+### 3.5. Открытие порта для доступа из локальной сети
+В VirtualBox настроен проброс портов:
+
+| Имя | Протокол | Адрес хоста | Порт хоста | Адрес гостя | Порт гостя |
+|-----|----------|-------------|------------|-------------|------------|
+| SSH | TCP | пусто | 2222 | пусто | 22 |
+
+Пустое поле в «Адресе хоста» означает 0.0.0.0 — доступ из локальной сети разрешён
+
+![alt text](l72.png)
+
+### 3.6. Закрытие порта после работы
+После завершения лабораторной работы для обеспечения безопасности порт был закрыт. Для этого в настройках проброса портов VirtualBox поле «Адрес хоста» было изменено с пустого на 127.0.0.1
+
+---
+
+## 4. Развертывание программы
+
+### 4.1. Необходимые программы на удаленной машине
+
+Для клонирования репозитория, сборки проекта и запуска тестов на целевой машине требуются следующие программы:
+
+| Программа | Назначение | Команда установки |
+|-----------|------------|-------------------|
+| **Git** | Клонирование репозитория | `sudo apt install git -y` |
+| **GCC/G++** | Компиляция C/C++ кода | `sudo apt install build-essential -y` |
+| **Make** | Система сборки (входит в build-essential) | `sudo apt install build-essential -y` |
+
+**Проверка установки программ:**
+
+```bash
+git --version
+g++ --version
+make --version
+```
+
+### 4.2. Организация доступа к репозиторию и клонирование репозитория
+Репозиторий с лабораторными работами публичный, поэтому для его клонирования не требуется аутентификация
+
+На виртуальной машине напарника выполнен **клон репозитория:**
+
+```bash
+dashka@daria-vm:~$ git clone https://github.com/chifffi/labs_git.git
+Cloning into 'labs_git'...
+remote: Enumerating objects: 396, done.
+remote: Counting objects: 100% (396/396), done.
+remote: Compressing objects: 100% (258/258), done.
+remote: Total 396 (delta 129), reused 319 (delta 81), pack-reused 0 (from 0
+Receiving objects: 100% (396/396), 5.42 MiB | 1.93 MiB/s, done.
+Resolving deltas: 100% (129/129), done.
+```
+
+### 4.3. Сборка проекта
+
+```bash
+dashka@daria-vm:~/labs_git/labs/lab2$ make
+g++ -g -c -o build/mystring.o src/mystring.cpp
+g++ -g -c -o build/basefile.o src/basefile.cpp
+g++ -g -c -o build/base32file.o src/base32file.cpp
+g++ -g -c -o build/rlefile.o src/rlefile.cpp
+g++ -g -c -o build/base32file2.o src/base32file2.cpp
+g++ -g -c -o build/rlefile2.o src/rlefile2.cpp
+g++ -g -o build/lab2.out src/lab2.cpp build/mystring.o build/basefile.o build/base32file.o build/rlefile.o build/base32file2.o build/rlefile2.o
+```
+
+### 4.4. Запуск программы
+
+```bash
+dashka@daria-vm:~/labs_git/labs/lab2$ make run
+./build/lab2.out
+Задание 1.1
+hi
+bye
+abcd
+Hi
+Bye
+Abcd
+
+Задание 1.2
+hi
+bye
+abcd
+```
+### 4.5. Проверка тестов
+
+```bash
+dashka@daria-vm:~/labs_git/labs/lab2$ make test
+g++ -g -o build/test_basefile.out tests/test_basefile.cpp build/mystring.o build/basefile.o build/base32file.o build/rlefile.o build/base32file2.o build/rlefile2.o
+g++ -g -o build/test_base32file.out tests/test_base32file.cpp build/mystring.o build/basefile.o build/base32file.o build/rlefile.o build/base32file2.o build/rlefile2.o
+g++ -g -o build/test_rlefile.out tests/test_rlefile.cpp build/mystring.o build/basefile.o build/base32file.o build/rlefile.o build/base32file2.o build/rlefile2.o
+g++ -g -o build/test_base32file2.out tests/test_base32file2.cpp build/mystring.o build/basefile.o build/base32file.o build/rlefile.o build/base32file2.o build/rlefile2.o
+g++ -g -o build/test_rlefile2.out tests/test_rlefile2.cpp build/mystring.o build/basefile.o build/base32file.o build/rlefile.o build/base32file2.o build/rlefile2.o
+g++ -g -o build/test_composition.out tests/test_composition.cpp build/mystring.o build/basefile.o build/base32file.o build/rlefile.o build/base32file2.o build/rlefile2.o
+========================================
+          ЗАПУСК ТЕСТОВ
+========================================
+
+--- Тест BaseFile ---
+
+ Тест BaseFile со случайными данными
+
+BaseFile::BaseFile(const char* path, const char* m)
+Записано 50000 байт
+BaseFile::~BaseFile()
+BaseFile::BaseFile(const char* path, const char* m)
+Прочитано 50000 байт
+BaseFile::~BaseFile()
+Тест BaseFile со случайными данными пройден!
+
+--- Тест Base32File ---
+
+ Тест Base32File со случайными данными
+
+BaseFile::BaseFile(const char* path, const char* m)
+Base32File::Base32File(const char* path, const char* m, const char* tbl)
+Записано 50000 байт
+Base32File::~Base32File()
+BaseFile::~BaseFile()
+BaseFile::BaseFile(const char* path, const char* m)
+Base32File::Base32File(const char* path, const char* m, const char* tbl)
+Прочитано 50000 байт
+Base32File::~Base32File()
+BaseFile::~BaseFile()
+Тест Base32File со случайными данными пройден!
+
+--- Тест RleFile ---
+
+ Тест RleFile со случайными данными
+
+BaseFile::BaseFile(const char* path, const char* m)
+RleFile::RleFile(const char*, const char*)
+Записано 50000 байт
+RleFile::~RleFile()
+BaseFile::~BaseFile()
+BaseFile::BaseFile(const char* path, const char* m)
+RleFile::RleFile(const char*, const char*)
+Прочитано 50000 байт
+RleFile::~RleFile()
+BaseFile::~BaseFile()
+
+ Тест RleFile пройден! Данные совпадают.
+
+--- Тест Base32File2 (композиция) ---
+
+ Тест Base32File2 (композиция) со случайными данными
+
+BaseFile::BaseFile(const char* path, const char* m)
+Base32File2::Base32File2()
+Записано 50000 байт
+BaseFile::~BaseFile()
+Base32File2::~Base32File2()
+BaseFile::BaseFile(const char* path, const char* m)
+Base32File2::Base32File2()
+Прочитано 50000 байт
+BaseFile::~BaseFile()
+Base32File2::~Base32File2()
+Тест Base32File2 пройден!
+
+--- Тест RleFile2 (композиция) ---
+
+ Тест RleFile2 (композиция) со случайными данными
+
+BaseFile::BaseFile(const char* path, const char* m)
+RleFile2::RleFile2()
+Записано 50000 байт
+BaseFile::~BaseFile()
+RleFile2::~RleFile2()
+BaseFile::BaseFile(const char* path, const char* m)
+RleFile2::RleFile2()
+Прочитано 50000 байт
+BaseFile::~BaseFile()
+RleFile2::~RleFile2()
+Тест RleFile2 пройден!
+
+--- Тест композиции RleFile2+Base32File2 ---
+
+Тест композиции RleFile2(Base32File2) со случайными данными
+
+BaseFile::BaseFile(const char* path, const char* m)
+Base32File2::Base32File2()
+RleFile2::RleFile2()
+Записано 50000 байт
+BaseFile::~BaseFile()
+Base32File2::~Base32File2()
+RleFile2::~RleFile2()
+BaseFile::BaseFile(const char* path, const char* m)
+Base32File2::Base32File2()
+RleFile2::RleFile2()
+Прочитано 50000 байт
+BaseFile::~BaseFile()
+Base32File2::~Base32File2()
+RleFile2::~RleFile2()
+Тест композиции RleFile2(Base32File2) пройден!
+
+========================================
+           ПРОВЕРКА ТЕСТОВ ЗАКОНЧЕНА
+========================================
 ```
