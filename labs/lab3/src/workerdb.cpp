@@ -66,7 +66,7 @@ int WorkerDb::hash(const MyString& key) const {
     
     for (int i = 0; i < len; i++) //по каждому символу строки
     {
-        h = (h * 31 + static_cast<unsigned char>(str[i])) % capacity;
+        h = (h * 31 + static_cast<unsigned char>(str[i])) % capacity; //static_cast — это оператор в C++ для явного преобразования типов на этапе компиляции
         //умножаем текущее хеш-значение на 31 
         //31 тк простое, нечетное, не слишком большое число, значит будет давать лучшее распределение при хешировании
         //преобразуем символ в unsigned char (от 0 до 255), чтобы работать с кодом символа как с неотрицательным числом
@@ -76,7 +76,7 @@ int WorkerDb::hash(const MyString& key) const {
     return h;
 }
 
-//Поиск индекса (с учетом пометки об удалении)
+//Поиск индекса (с учетом пометки об удалении) - быстро, без создания объектов для оператора []
 int WorkerDb::findIndex(const MyString& key) const {
     int index = hash(key);
     int startIndex = index;
@@ -88,7 +88,7 @@ int WorkerDb::findIndex(const MyString& key) const {
         if (!table[index].deleted && table[index].key == key) {
             return index;
         }
-        // Иначе коллизия, идём дальше
+        // коллизия, идём дальше
         index = (index + 1) % capacity; //% capacity чтобы не выйти за пределы
         
         // Если обошли всю таблицу и не нашли, выходим
@@ -147,7 +147,7 @@ WorkerData& WorkerDb::operator[](const MyString& key) {
         size++;
         
         // Проверяем, не пора ли расширить таблицу
-        if (static_cast<double>(size) / capacity >= LOAD_FACTOR) {
+        if (static_cast<double>(size) / capacity >= LOAD_FACTOR) { //static_cast — это оператор в C++ для явного преобразования типов на этапе компиляции
             rehash();
             index = findIndex(key);  // после расширения индекс мог измениться
         }
@@ -192,5 +192,51 @@ double get_avg_age(const WorkerDb& db) {
         count++;
     }
     
-    return static_cast<double>(totalAge) / count;
+    return static_cast<double>(totalAge) / count; //static_cast — это оператор в C++ для явного преобразования типов на этапе компиляции
+}
+
+// поиск 
+WorkerDbIterator WorkerDb::find(const MyString& surname) const {
+    int index = findIndex(surname);
+    
+    // Проверяем, что нашли активный элемент
+    if (index < capacity && table[index].occupied && !table[index].deleted && table[index].key == surname) {
+        return WorkerDbIterator(this, index);
+    }
+    return end();
+}
+
+// удаление по ключу
+void WorkerDb::remove(const MyString& key) {
+    int index = findIndex(key);
+    
+    // Проверяем, что элемент существует и активен
+    if (index < capacity && table[index].occupied && !table[index].deleted && table[index].key == key) {
+        table[index].deleted = true;  // помечаем как удаленное
+        size--;
+    }
+}
+
+// удаление по итератору
+void WorkerDb::erase(const WorkerDbIterator& pos) {
+    // Проверяем, что итератор принадлежит этой таблице
+    if (pos.container != this) {
+        throw "Iterator does not belong to this WorkerDb";
+    }
+    
+    int index = pos.currentIndex;
+    
+    // Проверяем, что индекс в пределах
+    if (index < 0 || index >= capacity) {
+        throw "Iterator is out of range";
+    }
+    
+    // Проверяем, что элемент существует и активен
+    if (!table[index].occupied || table[index].deleted) {
+        throw "Element already removed";
+    }
+    
+    // помечяем как удаленное
+    table[index].deleted = true;
+    size--;
 }

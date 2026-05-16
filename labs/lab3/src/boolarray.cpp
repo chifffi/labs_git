@@ -44,29 +44,29 @@ BitReference& BitReference::operator=(const BitReference& other) {
 }
 
 // Равенство 
-bool BitReference::operator==(bool other) const {
+/*bool BitReference::operator==(bool other) const {
     return array.getBit(index) == other;
-}
+}*/
 
 // Неравенство
-bool BitReference::operator!=(bool other) const {
+/*bool BitReference::operator!=(bool other) const {
     return array.getBit(index) != other;
-}
+}*/
 
 // Логическое отрицание: возвращает противоположное значение бита
-bool BitReference::operator!() const {
+/*bool BitReference::operator!() const {
     return !array.getBit(index);
-}
+}*/
 
 // Логическое и: возвращает true, если бит установлен И other == true
-bool BitReference::operator&&(bool other) const {
+/*bool BitReference::operator&&(bool other) const {
     return array.getBit(index) && other;
-}
+}*/
 
 // Логическое или: возвращает true, если бит установлен ИЛИ other == true
-bool BitReference::operator||(bool other) const {
+/*bool BitReference::operator||(bool other) const {
     return array.getBit(index) || other;
-}
+}*/
 
 // Конструктор массив из size значений false
 BoolArray::BoolArray(int size) : arr_size(size) {
