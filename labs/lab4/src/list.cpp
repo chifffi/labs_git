@@ -34,11 +34,16 @@ List::Node::~Node() {
 // Класс List
 // Конструктор по умолчанию
 // Создаёт пустой список с фиктивными узлами Head и Tail
-List::List(): m_size(0), m_head(), m_tail()
+List::List(): m_size(0), m_head(), m_tail(), m_cachedNode(nullptr), m_cachedIndex(0)
 {
     // Связываем Head и Tail друг с другом
     m_head.pNext = &m_tail;
     m_tail.pPrev = &m_head;
+}
+
+void List::invalidateCache() {
+    m_cachedNode = nullptr;
+    m_cachedIndex = 0;
 }
 
 // Конструктор копирования
@@ -85,6 +90,7 @@ void List::pushFront(const Circle& circle) {
     // Node(&m_head, &circle) — вызывает конструктор Node с двумя аргументами
     // &m_head - указ на предыдущ(фиктивный узел), & circle - указ на круг
     ++m_size;
+    invalidateCache();
 }
 
 // Добавление в конец списка (перед фиктивным Tail)
@@ -93,6 +99,7 @@ void List::pushBack(const Circle& circle) {
     // Node(m_tail.pPrev, &circle)) — вызывает конструктор Node с двумя аргументами
     // m_tail.pPrev - указ на последний реальный узел (или на m_head, если список пуст), & circle - указ на круг
     ++m_size;
+    invalidateCache();
 }
 
 // Удаление первого элемента с заданным значением(центр и радиус)
@@ -108,6 +115,7 @@ bool List::removeFirst(const Circle& value) {
             // delete вызывает деструктор объекта current (тип Node), который сам изменяет соседей
             // delete освобождает память, которую занимал узел
             --m_size;
+            invalidateCache();
             return true;
         }
         current = next; //перемещаем указатель current на следующий узел next
@@ -133,6 +141,11 @@ size_t List::removeAll(const Circle& value) {
         }
         current = next;
     }
+    
+    if (removed > 0) {
+        invalidateCache();
+    }
+
     return removed;
 }
 
@@ -150,17 +163,47 @@ void List::clear() {
     m_head.pNext = &m_tail;
     m_tail.pPrev = &m_head;
     m_size = 0;
+    invalidateCache();
 }
 
-// Неconst версия оператора []
+// оператор []
 Circle& List::operator[](size_t index) {
     assert(index < m_size);  // проверка выхода за границы
     
-    Node* current = m_head.pNext; // указ на первый реальный узел
-    for (size_t i = 0; i < index; i+=1) // Чтобы дойти от первого до узла с нужным индексом, нужно index раз перейти к следующему узлу
-    {
-        current = current->pNext; // перемещаем указатель current на следующий узел
+    // Если кэш валиден и индекс совпадает, сложность O(1)
+    if (m_cachedNode && index == m_cachedIndex) {
+        return m_cachedNode->m_data;
     }
+    
+    // Если кэш валиден и индекс больше, идём вперед от кэша
+    if (m_cachedNode && index > m_cachedIndex) {
+        Node* current = m_cachedNode;
+        for (size_t i = m_cachedIndex; i < index; ++i) {
+            current = current->pNext;
+        }
+        m_cachedNode = current;
+        m_cachedIndex = index;
+        return current->m_data;
+    }
+    
+    // Если кэш валиден и индекс меньше, идём назад от кэша
+    if (m_cachedNode && index < m_cachedIndex) {
+        Node* current = m_cachedNode;
+        for (size_t i = m_cachedIndex; i > index; --i) {
+            current = current->pPrev;
+        }
+        m_cachedNode = current;
+        m_cachedIndex = index;
+        return current->m_data;
+    }
+    
+    // Кэш не валиден,  идём сначала
+    Node* current = m_head.pNext;
+    for (size_t i = 0; i < index; ++i) {
+        current = current->pNext;
+    }
+    m_cachedNode = current;
+    m_cachedIndex = index;
     return current->m_data;
 }
 
@@ -168,10 +211,36 @@ Circle& List::operator[](size_t index) {
 const Circle& List::operator[](size_t index) const {
     assert(index < m_size);  // проверка выхода за границы
     
-    Node* current = m_head.pNext; // как в Неconst версии оператора []
-    for (size_t i = 0; i < index; i+=1) {
+    if (m_cachedNode && index == m_cachedIndex) {
+        return m_cachedNode->m_data;
+    }
+    
+    if (m_cachedNode && index > m_cachedIndex) {
+        Node* current = m_cachedNode;
+        for (size_t i = m_cachedIndex; i < index; ++i) {
+            current = current->pNext;
+        }
+        m_cachedNode = current;
+        m_cachedIndex = index;
+        return current->m_data;
+    }
+    
+    if (m_cachedNode && index < m_cachedIndex) {
+        Node* current = m_cachedNode;
+        for (size_t i = m_cachedIndex; i > index; --i) {
+            current = current->pPrev;
+        }
+        m_cachedNode = current;
+        m_cachedIndex = index;
+        return current->m_data;
+    }
+    
+    Node* current = m_head.pNext;
+    for (size_t i = 0; i < index; ++i) {
         current = current->pNext;
     }
+    m_cachedNode = current;
+    m_cachedIndex = index;
     return current->m_data;
 }
 
@@ -341,6 +410,8 @@ void List::sortByArea() {
     
     sortedTail->pNext = &m_tail;
     m_tail.pPrev = sortedTail;
+
+    invalidateCache();
 }
 
 
