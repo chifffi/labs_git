@@ -8,7 +8,7 @@
 - **Первый символ хеша:** 5
 - **Выбранный вариант:** Ubuntu + LXQt (Lubuntu)
 
-![alt text](image.png)
+![alt text](image-00.png)
 
 ---
 
